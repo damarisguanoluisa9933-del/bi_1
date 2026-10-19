@@ -160,6 +160,25 @@ function normalizeText(value) {
   return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es');
 }
 
+function findNormalizedMatch(originalText, query) {
+  let normalizedText = '';
+  const originalStarts = [];
+  const originalEnds = [];
+  for (let index = 0; index < originalText.length;) {
+    const character = String.fromCodePoint(originalText.codePointAt(index));
+    const normalizedCharacter = normalizeText(character);
+    for (const normalizedUnit of normalizedCharacter) {
+      normalizedText += normalizedUnit;
+      originalStarts.push(index);
+      originalEnds.push(index + character.length);
+    }
+    index += character.length;
+  }
+  const matchIndex = normalizedText.indexOf(query);
+  if (matchIndex < 0) return null;
+  return { start: originalStarts[matchIndex], end: originalEnds[matchIndex + query.length - 1] };
+}
+
 function escapeHtml(value) {
   return value.replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
 }
@@ -197,17 +216,19 @@ function initializeTopicSearch() {
         visibleCount += 1;
         const tbody = row.parentElement;
         visibleByTable.set(tbody, (visibleByTable.get(tbody) || 0) + 1);
-        const normalizedOriginal = normalizeText(originalText);
-        const startIndex = normalizedOriginal.indexOf(query);
-        if (query && startIndex >= 0) {
-          const endIndex = startIndex + query.length;
-          cell.innerHTML = `${escapeHtml(originalText.slice(0, startIndex))}<mark>${escapeHtml(originalText.slice(startIndex, endIndex))}</mark>${escapeHtml(originalText.slice(endIndex))}`;
+        const match = query ? findNormalizedMatch(originalText, query) : null;
+        if (match) {
+          cell.innerHTML = `${escapeHtml(originalText.slice(0, match.start))}<mark>${escapeHtml(originalText.slice(match.start, match.end))}</mark>${escapeHtml(originalText.slice(match.end))}`;
         } else {
           cell.textContent = originalText;
         }
       }
     });
-    emptyRows.forEach((emptyRow, tbody) => { emptyRow.hidden = (visibleByTable.get(tbody) || 0) > 0; });
+    emptyRows.forEach((emptyRow, tbody) => {
+      const visibleInUnit = visibleByTable.get(tbody) || 0;
+      emptyRow.hidden = visibleInUnit > 0;
+      if (query && visibleInUnit > 0) tbody.closest('.unit-card').open = true;
+    });
     status.textContent = query ? `${visibleCount} ${visibleCount === 1 ? 'tema encontrado' : 'temas encontrados'}` : `${topicRows.length} temas`;
   });
 }
@@ -375,6 +396,9 @@ function initializePrint() {
 
 async function exportPdf(button) {
   setBusy(button, true, 'Preparando PDF…');
+  const previousTheme = document.documentElement.dataset.theme;
+  document.documentElement.dataset.theme = 'light';
+  updateChartTheme();
   document.documentElement.classList.add('pdf-export');
   try {
     if (!window.html2pdf) throw new Error('No se pudo cargar html2pdf.js. Revisa la conexión e inténtalo de nuevo.');
@@ -392,6 +416,8 @@ async function exportPdf(button) {
     showToast(error.message || 'No se pudo exportar el PDF. Inténtalo de nuevo.');
   } finally {
     document.documentElement.classList.remove('pdf-export');
+    document.documentElement.dataset.theme = previousTheme;
+    updateChartTheme();
     setBusy(button, false);
   }
 }
@@ -421,6 +447,7 @@ function tableFromChart(chart) {
 function makeWordDocument() {
   const clonedContent = document.querySelector('#contenido-silabo').cloneNode(true);
   clonedContent.querySelectorAll('.action-bar, .side-rail, .copy-link, .unit-tools, .skill-controls').forEach((element) => element.remove());
+  clonedContent.querySelectorAll('.search-empty-row').forEach((row) => row.remove());
   clonedContent.querySelectorAll('details').forEach((details) => {
     const summary = document.createElement('h3');
     summary.textContent = details.querySelector('summary').textContent.trim();
@@ -447,7 +474,7 @@ function makeWordDocument() {
     if (link.href.startsWith('mailto:')) return;
     link.setAttribute('target', '_blank');
   });
-  const style = `body{font-family:Arial,sans-serif;color:#20243a;font-size:11pt;line-height:1.5}h1,h2,h3,h4{color:#312e81}h1{font-size:24pt}h2{font-size:18pt;border-bottom:1px solid #d9dbea;padding-bottom:6px}h3{font-size:13pt}p,li{line-height:1.55}table{border-collapse:collapse;width:100%;margin:10px 0}th,td{border:1px solid #d7d9e0;padding:6px;text-align:left}th{background:#f0efff}a{color:#4338ca}article,details{margin-bottom:12px}summary{font-weight:bold} .unit-card{page-break-before:always}`;
+  const style = `body{font-family:Arial,sans-serif;color:#20243a;font-size:11pt;line-height:1.5}h1,h2,h3,h4{color:#312e81}h1{font-size:24pt}h2{font-size:18pt;border-bottom:1px solid #d9dbea;padding-bottom:6px}h3{font-size:13pt}p,li{line-height:1.55}table{border-collapse:collapse;width:100%;margin:10px 0}th,td{border:1px solid #d7d9e0;padding:6px;text-align:left}th{background:#f0efff}a{color:#4338ca}article,section{margin-bottom:12px}.word-unit{page-break-before:always}`;
   return `<!doctype html><html><head><meta charset="utf-8"><title>Sílabo BI</title><style>${style}</style></head><body>${clonedContent.outerHTML}</body></html>`;
 }
 
