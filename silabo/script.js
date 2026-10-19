@@ -81,26 +81,6 @@ function initializeTheme() {
   button.addEventListener('click', () => setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'));
 }
 
-function initializeMenu() {
-  const menuButton = document.querySelector('#menu-toggle');
-  const navigation = document.querySelector('.main-nav');
-  menuButton.setAttribute('aria-controls', 'main-nav');
-  navigation.id = 'main-nav';
-  menuButton.addEventListener('click', () => {
-    const isOpen = menuButton.getAttribute('aria-expanded') !== 'true';
-    menuButton.setAttribute('aria-expanded', String(isOpen));
-    menuButton.setAttribute('aria-label', isOpen ? 'Cerrar navegación' : 'Abrir navegación');
-    menuButton.innerHTML = `<i class="fa-solid ${isOpen ? 'fa-xmark' : 'fa-bars'}" aria-hidden="true"></i>`;
-    navigation.classList.toggle('is-open', isOpen);
-  });
-  navigation.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
-    menuButton.setAttribute('aria-expanded', 'false');
-    menuButton.setAttribute('aria-label', 'Abrir navegación');
-    menuButton.innerHTML = '<i class="fa-solid fa-bars" aria-hidden="true"></i>';
-    navigation.classList.remove('is-open');
-  }));
-}
-
 function initializeReveal() {
   const targets = document.querySelectorAll('[data-reveal]');
   if (!('IntersectionObserver' in window)) {
@@ -117,23 +97,83 @@ function initializeReveal() {
   targets.forEach((target) => observer.observe(target));
 }
 
-function initializeSectionNavigation() {
-  const sections = [...document.querySelectorAll('main section[id]')];
-  const links = [...document.querySelectorAll('.main-nav a')];
-  if (!('IntersectionObserver' in window)) return;
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      links.forEach((link) => link.classList.toggle('is-active', link.hash === `#${entry.target.id}`));
+const tabAliases = new Map([
+  ['inicio', 'datos'],
+  ['datos-generales', 'datos'],
+  ['enfoque', 'datos'],
+  ['proyecto', 'plastrack'],
+  ['perfil-docente', 'docente']
+]);
+let activeTabId = 'dashboard';
+
+function tabIdFromHash(hash = window.location.hash) {
+  const slug = hash.replace(/^#/, '');
+  if ([...document.querySelectorAll('[data-tab-panel]')].some((panel) => panel.dataset.tabPanel === slug)) return slug;
+  return tabAliases.get(slug) || 'dashboard';
+}
+
+// Cambia el panel visible, actualiza el estado accesible de las pestañas y mantiene el hash sincronizado.
+function cambiarPestana(pestanaId, { updateHash = true, addHistory = false, focusTab = false } = {}) {
+  const slug = [...document.querySelectorAll('[data-tab-panel]')].some((item) => item.dataset.tabPanel === pestanaId) ? pestanaId : tabIdFromHash(`#${pestanaId}`);
+  const panel = [...document.querySelectorAll('[data-tab-panel]')].find((item) => item.dataset.tabPanel === slug);
+  if (!panel) return;
+
+  activeTabId = slug;
+  document.querySelectorAll('[data-tab-panel]').forEach((item) => {
+    const isActive = item === panel;
+    item.classList.toggle('is-active', isActive);
+    item.hidden = !isActive;
+    item.setAttribute('aria-hidden', String(!isActive));
+  });
+  document.querySelectorAll('[role="tab"][aria-controls]').forEach((tab) => {
+    const isActive = tab.getAttribute('aria-controls') === panel.id;
+    tab.classList.toggle('is-active', isActive);
+    tab.setAttribute('aria-selected', String(isActive));
+    tab.tabIndex = isActive ? 0 : -1;
+    if (isActive && focusTab) tab.focus();
+  });
+  panel.querySelectorAll('[data-reveal]').forEach((element) => element.classList.add('is-visible'));
+
+  if (updateHash && window.location.hash !== `#${slug}`) {
+    const method = addHistory ? 'pushState' : 'replaceState';
+    window.history[method](null, '', `#${slug}`);
+  }
+  if (slug === 'dashboard') {
+    Object.values(chartRegistry).forEach((chart) => chart.resize());
+  }
+}
+
+function initializeTabs() {
+  const tabs = [...document.querySelectorAll('[role="tab"][aria-controls]')];
+  tabs.forEach((tab) => {
+    tab.dataset.tabId = tab.getAttribute('aria-controls').replace('tab-', '');
+    tab.addEventListener('click', (event) => {
+      event.preventDefault();
+      cambiarPestana(tab.dataset.tabId, { addHistory: true });
     });
-  }, { rootMargin: '-20% 0px -68% 0px' });
-  sections.forEach((section) => observer.observe(section));
+    tab.addEventListener('keydown', (event) => {
+      const currentIndex = tabs.indexOf(tab);
+      let nextIndex = currentIndex;
+      if (event.key === 'ArrowRight') nextIndex = (currentIndex + 1) % tabs.length;
+      else if (event.key === 'ArrowLeft') nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+      else if (event.key === 'Home') nextIndex = 0;
+      else if (event.key === 'End') nextIndex = tabs.length - 1;
+      else return;
+      event.preventDefault();
+      cambiarPestana(tabs[nextIndex].dataset.tabId, { addHistory: true, focusTab: true });
+    });
+  });
+
+  const syncFromUrl = () => cambiarPestana(tabIdFromHash(), { updateHash: true });
+  window.addEventListener('hashchange', syncFromUrl);
+  window.addEventListener('popstate', syncFromUrl);
+  cambiarPestana(tabIdFromHash(), { updateHash: true });
 }
 
 function initializeCopyLinks() {
   document.querySelectorAll('.copy-link').forEach((button) => button.addEventListener('click', async () => {
-    const sectionId = button.dataset.copyTarget;
-    const link = new URL(`#${sectionId}`, window.location.href).href;
+    const panel = button.closest('[data-tab-panel]');
+    const link = new URL(`#${panel.dataset.tabPanel}`, window.location.href).href;
     try {
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(link);
@@ -383,140 +423,175 @@ function setBusy(button, isBusy, busyText) {
   button.innerHTML = isBusy ? `<i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i><span>${busyText}</span>` : button.dataset.originalHtml;
 }
 
-function initializePrint() {
-  const button = document.querySelector('#print-button');
-  button.addEventListener('click', () => {
-    setBusy(button, true, 'Preparando…');
-    window.setTimeout(() => {
-      window.print();
-      setBusy(button, false);
-    }, 80);
-  });
-}
-
-async function exportPdf(button) {
-  setBusy(button, true, 'Preparando PDF…');
-  const previousTheme = document.documentElement.dataset.theme;
-  document.documentElement.dataset.theme = 'light';
-  updateChartTheme();
-  document.documentElement.classList.add('pdf-export');
-  try {
-    if (!window.html2pdf) throw new Error('No se pudo cargar html2pdf.js. Revisa la conexión e inténtalo de nuevo.');
-    await new Promise((resolve) => window.setTimeout(resolve, 500));
-    await window.html2pdf().set({
-      margin: 10,
-      filename: 'Silabo_BI.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, backgroundColor: getPaletteColor('--page') },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-    }).from(document.querySelector('#contenido-silabo')).save();
-    showToast('El PDF se descargó correctamente.');
-  } catch (error) {
-    showToast(error.message || 'No se pudo exportar el PDF. Inténtalo de nuevo.');
-  } finally {
-    document.documentElement.classList.remove('pdf-export');
-    document.documentElement.dataset.theme = previousTheme;
-    updateChartTheme();
-    setBusy(button, false);
+// La impresión identifica el panel activo; el CSS oculta siempre el dashboard y solo deja visible ese panel.
+function imprimirPestana(pestanaId, button) {
+  if (!pestanaId || pestanaId === 'tab-dashboard') {
+    showToast('El dashboard no está disponible para impresión. Cambie a otra pestaña.');
+    return;
   }
+  setBusy(button, true, 'Preparando…');
+  window.print();
 }
 
-function tableFromChart(chart) {
-  const table = document.createElement('table');
-  table.style.cssText = 'width:100%;border-collapse:collapse;margin:10px 0;font-size:10pt;';
-  const header = table.createTHead().insertRow();
-  const firstHeading = document.createElement('th');
-  firstHeading.textContent = 'Categoría';
-  header.append(firstHeading);
-  chart.data.datasets.forEach((dataset) => {
-    const cell = document.createElement('th');
-    cell.textContent = dataset.label || 'Valor';
-    header.append(cell);
-  });
-  const body = table.createTBody();
-  chart.data.labels.forEach((label, index) => {
-    const row = body.insertRow();
-    row.insertCell().textContent = label;
-    chart.data.datasets.forEach((dataset) => row.insertCell().textContent = String(dataset.data[index]));
-  });
-  table.querySelectorAll('th, td').forEach((cell) => { cell.style.cssText = 'padding:6px;border:1px solid #d7d9e0;text-align:left;'; });
-  return table;
+function getActionButton(pestanaId, action) {
+  return document.querySelector(`#${pestanaId} [data-tab-action="${action}"]`);
 }
 
-function makeWordDocument() {
-  const clonedContent = document.querySelector('#contenido-silabo').cloneNode(true);
-  clonedContent.querySelectorAll('.action-bar, .side-rail, .copy-link, .unit-tools, .skill-controls').forEach((element) => element.remove());
-  clonedContent.querySelectorAll('.search-empty-row').forEach((row) => row.remove());
-  clonedContent.querySelectorAll('details').forEach((details) => {
-    const summary = document.createElement('h3');
-    summary.textContent = details.querySelector('summary').textContent.trim();
-    const unitSection = document.createElement('section');
-    unitSection.className = 'word-unit';
-    unitSection.append(summary, details.querySelector('.unit-content'));
-    details.replaceWith(unitSection);
-  });
-  clonedContent.querySelectorAll('tr[data-topic]').forEach((row) => {
+function getExportablePanel(pestanaId) {
+  const source = document.getElementById(pestanaId);
+  // El dashboard está marcado como no exportable y se rechaza antes de clonar cualquier contenido.
+  if (!source || source.dataset.noExport === 'true' || pestanaId === 'tab-dashboard') {
+    throw new Error('El dashboard no está disponible para exportación.');
+  }
+  if (!source.dataset.exportName) throw new Error('No se encontró el nombre de archivo para esta pestaña.');
+  return source;
+}
+
+function prepareExportClone(pestanaId) {
+  const source = getExportablePanel(pestanaId);
+  const clone = source.cloneNode(true);
+  clone.removeAttribute('id');
+  clone.hidden = false;
+  clone.classList.remove('is-active');
+  clone.classList.add('export-clone');
+  clone.setAttribute('aria-hidden', 'true');
+  clone.querySelectorAll('[data-reveal]').forEach((element) => element.classList.add('is-visible'));
+  clone.querySelectorAll('.tab-action-bar, .copy-link, .unit-tools, .skill-controls, .reset-scores, .search-empty-row').forEach((element) => element.remove());
+  clone.querySelectorAll('details').forEach((details) => { details.open = true; });
+  clone.querySelectorAll('tr[data-topic]').forEach((row) => {
     row.hidden = false;
     const topicCell = row.cells[0];
     if (topicCell.dataset.originalText) topicCell.textContent = topicCell.dataset.originalText;
   });
-  clonedContent.querySelectorAll('canvas').forEach((canvas) => {
-    const chart = Object.values(chartRegistry).find((item) => item.canvas.id === canvas.id);
-    const replacement = document.createElement('div');
-    const description = document.createElement('p');
-    description.textContent = canvas.getAttribute('aria-label') || 'Visualización de datos';
-    replacement.append(description);
-    if (chart) replacement.append(tableFromChart(chart));
-    canvas.closest('.chart-canvas')?.replaceWith(replacement);
-  });
-  clonedContent.querySelectorAll('a').forEach((link) => {
-    if (link.href.startsWith('mailto:')) return;
-    link.setAttribute('target', '_blank');
-  });
-  const style = `body{font-family:Arial,sans-serif;color:#20243a;font-size:11pt;line-height:1.5}h1,h2,h3,h4{color:#312e81}h1{font-size:24pt}h2{font-size:18pt;border-bottom:1px solid #d9dbea;padding-bottom:6px}h3{font-size:13pt}p,li{line-height:1.55}table{border-collapse:collapse;width:100%;margin:10px 0}th,td{border:1px solid #d7d9e0;padding:6px;text-align:left}th{background:#f0efff}a{color:#4338ca}article,section{margin-bottom:12px}.word-unit{page-break-before:always}`;
-  return `<!doctype html><html><head><meta charset="utf-8"><title>Sílabo BI</title><style>${style}</style></head><body>${clonedContent.outerHTML}</body></html>`;
+  clone.querySelectorAll('[hidden]').forEach((element) => element.removeAttribute('hidden'));
+  clone.style.cssText = 'position:absolute;left:-9999px;top:0;width:1200px;display:block;visibility:visible;background:var(--page);animation:none;';
+  document.body.append(clone);
+  return clone;
 }
 
-async function exportWord(button) {
-  setBusy(button, true, 'Preparando Word…');
+// Exporta únicamente el panel solicitado, clonándolo fuera de pantalla para renderizarlo aunque no esté activo.
+async function exportarPDF(pestanaId) {
+  let button;
+  let clone;
   try {
-    const documentHtml = makeWordDocument();
+    const panel = getExportablePanel(pestanaId);
+    button = getActionButton(pestanaId, 'pdf');
+    if (!button) throw new Error('No se encontró el botón para exportar esta pestaña.');
+    setBusy(button, true, 'Exportando…');
+    if (!window.html2pdf) throw new Error('No se pudo cargar html2pdf.js. Revisa la conexión e inténtalo de nuevo.');
+    clone = prepareExportClone(pestanaId);
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    await document.fonts.ready;
+    await window.html2pdf().set({
+      margin: 10,
+      filename: `${panel.dataset.exportName}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: getPaletteColor('--page'), scrollX: 0, scrollY: 0, windowWidth: 1200 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    }).from(clone).save();
+    showToast('El PDF de la pestaña se descargó correctamente.');
+  } catch (error) {
+    console.error('No se pudo exportar la pestaña a PDF.', error);
+    showToast(error.message || 'No se pudo exportar el PDF. Inténtalo de nuevo.');
+  } finally {
+    clone?.remove();
+    if (button) setBusy(button, false);
+  }
+}
+
+function makeWordDocument(clone, pestanaId) {
+  clone.classList.remove('export-clone');
+  clone.style.removeProperty('position');
+  clone.style.removeProperty('left');
+  clone.style.removeProperty('top');
+  clone.style.removeProperty('width');
+  clone.style.removeProperty('display');
+  clone.style.removeProperty('visibility');
+  clone.style.removeProperty('background');
+  clone.style.removeProperty('animation');
+  clone.removeAttribute('aria-hidden');
+  clone.querySelectorAll('details').forEach((details) => {
+    const heading = document.createElement('h3');
+    heading.textContent = details.querySelector('summary').textContent.trim();
+    const content = details.querySelector('.unit-content');
+    details.replaceWith(heading, content);
+  });
+  clone.querySelectorAll('a').forEach((link) => {
+    if (!link.href.startsWith('mailto:')) link.setAttribute('target', '_blank');
+  });
+  let syllabusStyles = '';
+  for (const stylesheet of document.styleSheets) {
+    if (!stylesheet.href?.startsWith(window.location.origin) || !stylesheet.href.endsWith('/styles.css')) continue;
+    try {
+      syllabusStyles = [...stylesheet.cssRules].map((rule) => rule.cssText).join('\n');
+    } catch (error) {
+      console.warn('No se pudo incorporar la hoja de estilos al documento Word.', error);
+    }
+  }
+  const style = `body{font-family:Arial,sans-serif;color:#20243a;font-size:11pt;line-height:1.5}h1,h2,h3,h4{color:#312e81}h1{font-size:24pt}h2{font-size:18pt;border-bottom:1px solid #d9dbea;padding-bottom:6px}h3{font-size:13pt}p,li{line-height:1.55}table{border-collapse:collapse;width:100%;margin:10px 0}th,td{border:1px solid #d7d9e0;padding:6px;text-align:left}th{background:#f0efff}a{color:#4338ca}article,section{margin-bottom:12px}.page-shell{width:100%}.tab-panel{display:block!important;background:#fff;color:#20243a}.content-section{margin-bottom:18px}.section-heading h2{font-size:18pt}.word-unit{page-break-before:always}`;
+  const title = document.querySelector(`#${pestanaId} .section-heading h2`)?.textContent.trim() || 'Sílabo BI';
+  return `<!doctype html><html><head><meta charset="utf-8"><title>${title}</title><style>${syllabusStyles}\n${style}</style></head><body>${clone.outerHTML}</body></html>`;
+}
+
+// Exporta a Word solo el panel solicitado usando Blob con el tipo MIME compatible con Microsoft Word.
+async function exportarWord(pestanaId) {
+  let button;
+  let clone;
+  try {
+    const panel = getExportablePanel(pestanaId);
+    button = getActionButton(pestanaId, 'word');
+    if (!button) throw new Error('No se encontró el botón para exportar esta pestaña.');
+    setBusy(button, true, 'Exportando…');
+    clone = prepareExportClone(pestanaId);
+    const documentHtml = makeWordDocument(clone, pestanaId);
     const wordBlob = new Blob(['\ufeff', documentHtml], { type: 'application/msword;charset=utf-8' });
     const downloadUrl = URL.createObjectURL(wordBlob);
     const downloadLink = document.createElement('a');
     downloadLink.href = downloadUrl;
-    downloadLink.download = 'Silabo_BI.doc';
+    downloadLink.download = `${panel.dataset.exportName}.doc`;
     document.body.append(downloadLink);
     downloadLink.click();
     downloadLink.remove();
     window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
-    showToast('El documento Word se descargó correctamente.');
+    showToast('El documento Word de la pestaña se descargó correctamente.');
   } catch (error) {
+    console.error('No se pudo exportar la pestaña a Word.', error);
     showToast(error.message || 'No se pudo exportar el documento Word.');
   } finally {
-    setBusy(button, false);
+    clone?.remove();
+    if (button) setBusy(button, false);
   }
 }
 
-function initializeExports() {
-  const pdfButton = document.querySelector('#pdf-button');
-  const wordButton = document.querySelector('#word-button');
-  pdfButton.addEventListener('click', () => exportPdf(pdfButton));
-  wordButton.addEventListener('click', () => exportWord(wordButton));
+function initializeTabActions() {
+  document.querySelectorAll('[data-tab-action]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const panel = button.closest('[data-tab-panel]');
+      if (button.dataset.tabAction === 'print') imprimirPestana(panel.id, button);
+      else if (button.dataset.tabAction === 'pdf') exportarPDF(panel.id);
+      else if (button.dataset.tabAction === 'word') exportarWord(panel.id);
+    });
+  });
+
+  window.addEventListener('beforeprint', () => {
+    document.body.dataset.printDashboard = String(activeTabId === 'dashboard');
+  });
+  window.addEventListener('afterprint', () => {
+    delete document.body.dataset.printDashboard;
+    document.querySelectorAll('[data-tab-action="print"]').forEach((button) => setBusy(button, false));
+  });
 }
 
 function initialize() {
   initializeTheme();
-  initializeMenu();
+  initializeTabs();
   initializeReveal();
-  initializeSectionNavigation();
   initializeCopyLinks();
   initializeTopicSearch();
   initializeUnitControls();
   initializeSkillControls();
-  initializePrint();
-  initializeExports();
+  initializeTabActions();
   createCharts();
   updateChartTheme();
 }

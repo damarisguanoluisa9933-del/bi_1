@@ -25,18 +25,54 @@
       <span class="brand-mark" aria-hidden="true"><i class="fa-solid fa-chart-line"></i></span>
       <span><strong>SÍLABO <b>BI</b></strong><small>SISTEMAS DE INFORMACIÓN · UTC</small></span>
     </a>
-    <nav class="main-nav" id="main-nav" aria-label="Navegación del sílabo">
-      <a href="#inicio">Inicio</a><a href="#datos-generales">Datos generales</a><a href="#unidades">Unidades</a><a href="#habilidades">Habilidades</a><a href="#evaluacion">Evaluación</a><a href="#proyecto">Proyecto</a><a href="#bibliografia">Bibliografía</a>
-    </nav>
     <div class="header-actions">
       <a class="portfolio-link" href="../index.html" aria-label="Volver al portafolio"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i><span>Volver al portafolio</span></a>
       <button class="icon-button theme-toggle" id="theme-toggle" type="button" aria-label="Activar modo oscuro" aria-pressed="false" title="Cambiar tema"><i class="fa-solid fa-moon" aria-hidden="true"></i></button>
-      <button class="menu-toggle icon-button" id="menu-toggle" type="button" aria-label="Abrir navegación" aria-expanded="false" aria-controls="main-nav"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
     </div>
   </header>
 
+  <nav class="tabs-bar" aria-label="Pestañas del sílabo">
+    <div class="tabs-list" role="tablist" aria-label="Secciones del sílabo">
+      <a class="tab-button is-active" id="tab-button-dashboard" href="#dashboard" role="tab" aria-selected="true" aria-controls="tab-dashboard" tabindex="0">Dashboard</a>
+      <a class="tab-button" id="tab-button-datos" href="#datos" role="tab" aria-selected="false" aria-controls="tab-datos" tabindex="-1">Datos Generales</a>
+      <a class="tab-button" id="tab-button-unidades" href="#unidades" role="tab" aria-selected="false" aria-controls="tab-unidades" tabindex="-1">Unidades</a>
+      <a class="tab-button" id="tab-button-habilidades" href="#habilidades" role="tab" aria-selected="false" aria-controls="tab-habilidades" tabindex="-1">Habilidades Blandas</a>
+      <a class="tab-button" id="tab-button-evaluacion" href="#evaluacion" role="tab" aria-selected="false" aria-controls="tab-evaluacion" tabindex="-1">Evaluación</a>
+      <a class="tab-button" id="tab-button-plastrack" href="#plastrack" role="tab" aria-selected="false" aria-controls="tab-plastrack" tabindex="-1">Proyecto PlasTrack</a>
+      <a class="tab-button" id="tab-button-bibliografia" href="#bibliografia" role="tab" aria-selected="false" aria-controls="tab-bibliografia" tabindex="-1">Bibliografía</a>
+      <a class="tab-button" id="tab-button-docente" href="#docente" role="tab" aria-selected="false" aria-controls="tab-docente" tabindex="-1">Docente</a>
+    </div>
+  </nav>
+
   <main id="contenido-silabo">
-    <section class="hero page-shell" id="inicio" aria-labelledby="page-title" data-reveal>
+    <div class="print-warning" role="status">El dashboard no está disponible para impresión. Cambie a otra pestaña.</div>
+    <div class="tab-panels">
+      <section class="tab-panel page-shell no-print is-active" id="tab-dashboard" role="tabpanel" tabindex="0" aria-labelledby="tab-button-dashboard" aria-hidden="false" data-tab-panel="dashboard" data-no-export="true">
+        <p class="dashboard-screen-note">⚠️ Este dashboard es solo para visualización en pantalla. No se incluye en la impresión ni en las exportaciones.</p>
+        <section class="content-section dashboard-section" id="dashboard" aria-labelledby="dashboard-title" data-reveal>
+          <div class="section-heading"><div><p class="section-kicker">03 <span>/ VISTA EJECUTIVA</span></p><h2 id="dashboard-title">El sílabo en datos</h2><p class="section-intro">Una lectura visual de la carga horaria, los resultados de aprendizaje y el recorrido académico.</p></div><button class="copy-link" type="button" data-copy-target="dashboard" aria-label="Copiar enlace al dashboard" title="Copiar enlace de esta sección"><i class="fa-solid fa-link" aria-hidden="true"></i></button></div>
+          <div class="kpi-grid">
+            <article class="kpi-card" tabindex="0" title="Tres créditos académicos"><span class="kpi-icon indigo"><i class="fa-solid fa-award" aria-hidden="true"></i></span><span class="kpi-label">CRÉDITOS</span><strong>3</strong><small>académicos</small></article>
+            <article class="kpi-card" tabindex="0" title="144 horas en total: 48 de docencia, 48 prácticas y 48 autónomas"><span class="kpi-icon green"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i></span><span class="kpi-label">HORAS TOTALES</span><strong>144</strong><small>horas académicas</small></article>
+            <article class="kpi-card" tabindex="0" title="Tres unidades de aprendizaje"><span class="kpi-icon amber"><i class="fa-solid fa-layer-group" aria-hidden="true"></i></span><span class="kpi-label">UNIDADES</span><strong>3</strong><small>de aprendizaje</small></article>
+            <article class="kpi-card" tabindex="0" title="Seis habilidades blandas desarrolladas durante la asignatura"><span class="kpi-icon blue"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i></span><span class="kpi-label">HABILIDADES</span><strong>6</strong><small>blandas</small></article>
+            <article class="kpi-card" tabindex="0" title="Tres fechas planificadas para evaluación"><span class="kpi-icon rose"><i class="fa-solid fa-list-check" aria-hidden="true"></i></span><span class="kpi-label">EVALUACIONES</span><strong>3</strong><small>hitos del período</small></article>
+            <article class="kpi-card" tabindex="0" title="Diez referencias entre bibliografía básica, complementaria y sitios web recomendados"><span class="kpi-icon slate"><i class="fa-solid fa-book-bookmark" aria-hidden="true"></i></span><span class="kpi-label">BIBLIOGRAFÍA</span><strong>10</strong><small>recursos</small></article>
+          </div>
+          <div class="chart-grid">
+            <article class="chart-card"><div class="chart-title-row"><div><span class="chart-index">01 / DISTRIBUCIÓN</span><h3>Horas del período</h3></div><span class="chart-caption">144 HORAS</span></div><div class="chart-canvas chart-doughnut"><canvas id="hours-chart" role="img" aria-label="Gráfico de dona: 48 horas de docencia, 48 prácticas y 48 autónomas"></canvas></div><p class="chart-summary">Docencia 48 · Prácticas 48 · Autónomas 48</p></article>
+            <article class="chart-card"><div class="chart-title-row"><div><span class="chart-index">02 / PLANIFICACIÓN</span><h3>Horas docentes por unidad</h3></div><span class="chart-caption">DOCENCIA</span></div><div class="chart-canvas chart-bars"><canvas id="units-chart" role="img" aria-label="Gráfico de barras: Unidad 1, 15 horas; Unidad 2, 15 horas; Unidad 3, 18 horas docentes"></canvas></div><p class="chart-summary">Unidad 1: 15 h · Unidad 2: 15 h · Unidad 3: 18 h</p></article>
+            <article class="chart-card skills-chart-card"><div class="chart-title-row"><div><span class="chart-index">03 / HABILIDADES</span><h3>Indicadores de desarrollo</h3></div><span class="chart-caption">EDITABLE · 1–5</span></div><div class="chart-canvas chart-radar"><canvas id="skills-chart" role="img" aria-label="Gráfico radar de nivel simbólico editable para seis habilidades blandas"></canvas></div><p class="chart-summary">Puntaje simbólico, ajustable por el estudiante.</p></article>
+          </div>
+          <div class="skill-controls" aria-labelledby="skill-controls-title"><div class="skill-controls-heading"><div><h3 id="skill-controls-title">Ajusta los puntajes</h3><p>Escala simbólica de 1 a 5; no corresponde a una calificación académica.</p></div><button class="reset-scores" id="reset-scores" type="button" aria-label="Restablecer puntajes simbólicos"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Restablecer</button></div><div class="skill-slider-grid" id="skill-slider-grid"></div></div>
+          <div class="timeline-block" id="timeline"><div class="chart-title-row"><div><span class="chart-index">04 / CALENDARIO</span><h3>Fechas clave del período</h3></div><span class="chart-caption">2026 — 2027</span></div><ol class="timeline"><li><span class="timeline-marker start-marker"></span><span class="timeline-date">12 OCT 2026</span><strong>Inicio del período</strong></li><li><span class="timeline-marker"></span><span class="timeline-date">22 NOV 2026</span><strong>EVAL1</strong></li><li><span class="timeline-marker"></span><span class="timeline-date">10 ENE 2027</span><strong>EVAL2</strong></li><li><span class="timeline-marker"></span><span class="timeline-date">14 FEB 2027</span><strong>EVAL3</strong></li><li><span class="timeline-marker end-marker"></span><span class="timeline-date">21 FEB 2027</span><strong>Fin del período</strong></li></ol></div>
+        </section>
+      </section>
+
+      <section class="tab-panel" id="tab-datos" role="tabpanel" tabindex="0" aria-labelledby="tab-button-datos" aria-hidden="true" data-tab-panel="datos" data-export-name="Silabo_BI_DatosGenerales" hidden>
+        <div class="action-bar tab-action-bar no-print"><div class="action-bar-inner page-shell"><p><i class="fa-solid fa-file-lines" aria-hidden="true"></i> Datos Generales</p><div class="action-buttons"><button class="action-button" type="button" data-tab-action="print"><i class="fa-solid fa-print" aria-hidden="true"></i><span>🖨 Imprimir esta pestaña</span></button><button class="action-button action-secondary" type="button" data-tab-action="pdf"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i><span>📄 Exportar esta pestaña a PDF</span></button><button class="action-button action-secondary" type="button" data-tab-action="word"><i class="fa-solid fa-file-word" aria-hidden="true"></i><span>📝 Exportar esta pestaña a Word</span></button></div></div></div>
+        <div class="page-shell">
+          <section class="hero" id="inicio" aria-labelledby="page-title" data-reveal>
       <div class="hero-copy">
         <p class="eyebrow"><span class="eyebrow-dot"></span> UNIVERSIDAD TÉCNICA DE COTOPAXI <span class="eyebrow-divider">/</span> 8.º CICLO</p>
         <h1 id="page-title">Sistemas de Información para la <span>Inteligencia de Negocios</span></h1>
@@ -52,26 +88,7 @@
         <div class="hero-aside-foot"><span>ISISI8051</span><span>PARALELO A</span></div>
         <span class="hero-orbit orbit-a" aria-hidden="true"></span><span class="hero-orbit orbit-b" aria-hidden="true"></span>
       </aside>
-    </section>
-
-    <div class="action-bar" aria-label="Acciones del documento">
-      <div class="action-bar-inner page-shell">
-        <p><i class="fa-solid fa-file-lines" aria-hidden="true"></i> Sílabo académico <span>·</span> Período 2026–2027</p>
-        <div class="action-buttons">
-          <button class="action-button" id="print-button" type="button" aria-label="Imprimir el sílabo"><i class="fa-solid fa-print" aria-hidden="true"></i><span>Imprimir</span></button>
-          <button class="action-button action-secondary" id="pdf-button" type="button" aria-label="Exportar el sílabo a PDF"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i><span>Exportar PDF</span></button>
-          <button class="action-button action-secondary" id="word-button" type="button" aria-label="Exportar el sílabo a Word"><i class="fa-solid fa-file-word" aria-hidden="true"></i><span>Exportar Word</span></button>
-        </div>
-      </div>
-    </div>
-
-    <div class="page-shell content-layout">
-      <aside class="side-rail" aria-label="Accesos rápidos">
-        <span class="rail-label">EN ESTA PÁGINA</span>
-        <a href="#datos-generales">01 <span>Datos</span></a><a href="#dashboard">02 <span>Dashboard</span></a><a href="#unidades">03 <span>Unidades</span></a><a href="#habilidades">04 <span>Habilidades</span></a><a href="#evaluacion">05 <span>Evaluación</span></a><a href="#proyecto">06 <span>Proyecto</span></a><a href="#bibliografia">07 <span>Recursos</span></a>
-      </aside>
-
-      <div class="main-content">
+          </section>
         <section class="content-section" id="datos-generales" aria-labelledby="datos-title" data-reveal>
           <div class="section-heading"><div><p class="section-kicker">01 <span>/ INFORMACIÓN ACADÉMICA</span></p><h2 id="datos-title">Datos generales</h2></div><button class="copy-link" type="button" data-copy-target="datos-generales" aria-label="Copiar enlace a Datos generales" title="Copiar enlace de esta sección"><i class="fa-solid fa-link" aria-hidden="true"></i></button></div>
           <div class="general-grid">
@@ -102,26 +119,11 @@
           <article class="prose-card"><span class="prose-icon icon-green"><i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i></span><div><h3>Aporte al perfil de egreso</h3><p>La asignatura aporta en construir procesos que comprenden la extracción, combinación, depuración y distribución de la información a los usuarios finales lo cual resulta fundamental dentro de las organizaciones donde se manejan grandes volúmenes de datos que debe ser analizados de forma sistematizada para generar información que apoye en la toma de decisiones inteligentes.</p></div></article>
           <article class="prose-card objective-card"><span class="prose-icon icon-amber"><i class="fa-solid fa-bullseye" aria-hidden="true"></i></span><div><h3>Objetivo general</h3><p>Analizar los principales conceptos relacionados con los fundamentos, características y modelamiento de la inteligencia de negocios con la finalidad entender la forma de cómo implementar este tipo de herramientas dentro de una organización mediante la descripción detallada de las diferentes etapas que deben considerarse para su correcta ejecución.</p></div></article>
         </section>
-
-        <section class="content-section dashboard-section" id="dashboard" aria-labelledby="dashboard-title" data-reveal>
-          <div class="section-heading"><div><p class="section-kicker">03 <span>/ VISTA EJECUTIVA</span></p><h2 id="dashboard-title">El sílabo en datos</h2><p class="section-intro">Una lectura visual de la carga horaria, los resultados de aprendizaje y el recorrido académico.</p></div><button class="copy-link" type="button" data-copy-target="dashboard" aria-label="Copiar enlace al dashboard" title="Copiar enlace de esta sección"><i class="fa-solid fa-link" aria-hidden="true"></i></button></div>
-          <div class="kpi-grid">
-            <article class="kpi-card" tabindex="0" title="Tres créditos académicos"><span class="kpi-icon indigo"><i class="fa-solid fa-award" aria-hidden="true"></i></span><span class="kpi-label">CRÉDITOS</span><strong>3</strong><small>académicos</small></article>
-            <article class="kpi-card" tabindex="0" title="144 horas en total: 48 de docencia, 48 prácticas y 48 autónomas"><span class="kpi-icon green"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i></span><span class="kpi-label">HORAS TOTALES</span><strong>144</strong><small>horas académicas</small></article>
-            <article class="kpi-card" tabindex="0" title="Tres unidades de aprendizaje"><span class="kpi-icon amber"><i class="fa-solid fa-layer-group" aria-hidden="true"></i></span><span class="kpi-label">UNIDADES</span><strong>3</strong><small>de aprendizaje</small></article>
-            <article class="kpi-card" tabindex="0" title="Seis habilidades blandas desarrolladas durante la asignatura"><span class="kpi-icon blue"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i></span><span class="kpi-label">HABILIDADES</span><strong>6</strong><small>blandas</small></article>
-            <article class="kpi-card" tabindex="0" title="Tres fechas planificadas para evaluación"><span class="kpi-icon rose"><i class="fa-solid fa-list-check" aria-hidden="true"></i></span><span class="kpi-label">EVALUACIONES</span><strong>3</strong><small>hitos del período</small></article>
-            <article class="kpi-card" tabindex="0" title="Diez referencias entre bibliografía básica, complementaria y sitios web recomendados"><span class="kpi-icon slate"><i class="fa-solid fa-book-bookmark" aria-hidden="true"></i></span><span class="kpi-label">BIBLIOGRAFÍA</span><strong>10</strong><small>recursos</small></article>
-          </div>
-          <div class="chart-grid">
-            <article class="chart-card"><div class="chart-title-row"><div><span class="chart-index">01 / DISTRIBUCIÓN</span><h3>Horas del período</h3></div><span class="chart-caption">144 HORAS</span></div><div class="chart-canvas chart-doughnut"><canvas id="hours-chart" role="img" aria-label="Gráfico de dona: 48 horas de docencia, 48 prácticas y 48 autónomas"></canvas></div><p class="chart-summary">Docencia 48 · Prácticas 48 · Autónomas 48</p></article>
-            <article class="chart-card"><div class="chart-title-row"><div><span class="chart-index">02 / PLANIFICACIÓN</span><h3>Horas docentes por unidad</h3></div><span class="chart-caption">DOCENCIA</span></div><div class="chart-canvas chart-bars"><canvas id="units-chart" role="img" aria-label="Gráfico de barras: Unidad 1, 15 horas; Unidad 2, 15 horas; Unidad 3, 18 horas docentes"></canvas></div><p class="chart-summary">Unidad 1: 15 h · Unidad 2: 15 h · Unidad 3: 18 h</p></article>
-            <article class="chart-card skills-chart-card"><div class="chart-title-row"><div><span class="chart-index">03 / HABILIDADES</span><h3>Indicadores de desarrollo</h3></div><span class="chart-caption">EDITABLE · 1–5</span></div><div class="chart-canvas chart-radar"><canvas id="skills-chart" role="img" aria-label="Gráfico radar de nivel simbólico editable para seis habilidades blandas"></canvas></div><p class="chart-summary">Puntaje simbólico, ajustable por el estudiante.</p></article>
-          </div>
-          <div class="skill-controls" aria-labelledby="skill-controls-title"><div class="skill-controls-heading"><div><h3 id="skill-controls-title">Ajusta los puntajes</h3><p>Escala simbólica de 1 a 5; no corresponde a una calificación académica.</p></div><button class="reset-scores" id="reset-scores" type="button" aria-label="Restablecer puntajes simbólicos"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Restablecer</button></div><div class="skill-slider-grid" id="skill-slider-grid"></div></div>
-          <div class="timeline-block" id="timeline"><div class="chart-title-row"><div><span class="chart-index">04 / CALENDARIO</span><h3>Fechas clave del período</h3></div><span class="chart-caption">2026 — 2027</span></div><ol class="timeline"><li><span class="timeline-marker start-marker"></span><span class="timeline-date">12 OCT 2026</span><strong>Inicio del período</strong></li><li><span class="timeline-marker"></span><span class="timeline-date">22 NOV 2026</span><strong>EVAL1</strong></li><li><span class="timeline-marker"></span><span class="timeline-date">10 ENE 2027</span><strong>EVAL2</strong></li><li><span class="timeline-marker"></span><span class="timeline-date">14 FEB 2027</span><strong>EVAL3</strong></li><li><span class="timeline-marker end-marker"></span><span class="timeline-date">21 FEB 2027</span><strong>Fin del período</strong></li></ol></div>
-        </section>
-
+        </div>
+      </section>
+      <section class="tab-panel" id="tab-unidades" role="tabpanel" tabindex="0" aria-labelledby="tab-button-unidades" aria-hidden="true" data-tab-panel="unidades" data-export-name="Silabo_BI_Unidades" hidden>
+        <div class="action-bar tab-action-bar no-print"><div class="action-bar-inner page-shell"><p><i class="fa-solid fa-file-lines" aria-hidden="true"></i> Unidades</p><div class="action-buttons"><button class="action-button" type="button" data-tab-action="print"><i class="fa-solid fa-print" aria-hidden="true"></i><span>🖨 Imprimir esta pestaña</span></button><button class="action-button action-secondary" type="button" data-tab-action="pdf"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i><span>📄 Exportar esta pestaña a PDF</span></button><button class="action-button action-secondary" type="button" data-tab-action="word"><i class="fa-solid fa-file-word" aria-hidden="true"></i><span>📝 Exportar esta pestaña a Word</span></button></div></div></div>
+        <div class="page-shell">
         <section class="content-section units-section" id="unidades" aria-labelledby="units-title" data-reveal>
           <div class="section-heading"><div><p class="section-kicker">04 <span>/ RUTA DE APRENDIZAJE</span></p><h2 id="units-title">Unidades de aprendizaje</h2><p class="section-intro">Tres unidades conectan los fundamentos, el análisis multidimensional y la construcción de soluciones BI.</p></div><button class="copy-link" type="button" data-copy-target="unidades" aria-label="Copiar enlace a las unidades" title="Copiar enlace de esta sección"><i class="fa-solid fa-link" aria-hidden="true"></i></button></div>
           <div class="unit-tools"><label class="search-box" for="buscador"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input id="buscador" type="search" placeholder="Buscar temas de las unidades…" autocomplete="off"><kbd>⌕</kbd></label><span id="search-status" class="search-status" role="status" aria-live="polite">12 temas</span><button class="text-button" id="toggle-units" type="button" aria-expanded="true">Colapsar todo</button></div>
@@ -173,7 +175,11 @@
             </details>
           </div>
         </section>
-
+        </div>
+      </section>
+      <section class="tab-panel" id="tab-habilidades" role="tabpanel" tabindex="0" aria-labelledby="tab-button-habilidades" aria-hidden="true" data-tab-panel="habilidades" data-export-name="Silabo_BI_Habilidades" hidden>
+        <div class="action-bar tab-action-bar no-print"><div class="action-bar-inner page-shell"><p><i class="fa-solid fa-file-lines" aria-hidden="true"></i> Habilidades Blandas</p><div class="action-buttons"><button class="action-button" type="button" data-tab-action="print"><i class="fa-solid fa-print" aria-hidden="true"></i><span>🖨 Imprimir esta pestaña</span></button><button class="action-button action-secondary" type="button" data-tab-action="pdf"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i><span>📄 Exportar esta pestaña a PDF</span></button><button class="action-button action-secondary" type="button" data-tab-action="word"><i class="fa-solid fa-file-word" aria-hidden="true"></i><span>📝 Exportar esta pestaña a Word</span></button></div></div></div>
+        <div class="page-shell">
         <section class="content-section skills-section" id="habilidades" aria-labelledby="skills-title" data-reveal>
           <div class="section-heading"><div><p class="section-kicker">05 <span>/ COMPETENCIAS TRANSVERSALES</span></p><h2 id="skills-title">Habilidades blandas</h2><p class="section-intro">Seis capacidades que se ponen en práctica al convertir datos en soluciones útiles y responsables.</p></div><button class="copy-link" type="button" data-copy-target="habilidades" aria-label="Copiar enlace a las habilidades blandas" title="Copiar enlace de esta sección"><i class="fa-solid fa-link" aria-hidden="true"></i></button></div>
           <div class="soft-skills-grid">
@@ -185,18 +191,30 @@
             <article class="soft-skill"><span class="soft-skill-icon"><i class="fa-solid fa-puzzle-piece" aria-hidden="true"></i></span><span class="skill-number">06</span><h3>Resolución de problemas</h3><p>Habilidad para utilizar dimensiones cognitivas, pragmáticas y actitudinales con creatividad para dar respuesta a situaciones del entorno social y profesional.</p><div class="skill-contribution"><strong>¿Cómo aporta?</strong><p>Aporta porque enfrenta problemas reales de negocio que requieren organizar grandes volúmenes de datos, aplicar procesos ETL y construir soluciones de BI; el estudiante analiza la situación, selecciona herramientas y diseña dashboards o sistemas de reportes.</p></div></article>
           </div>
         </section>
-
+        </div>
+      </section>
+      <section class="tab-panel" id="tab-evaluacion" role="tabpanel" tabindex="0" aria-labelledby="tab-button-evaluacion" aria-hidden="true" data-tab-panel="evaluacion" data-export-name="Silabo_BI_Evaluacion" hidden>
+        <div class="action-bar tab-action-bar no-print"><div class="action-bar-inner page-shell"><p><i class="fa-solid fa-file-lines" aria-hidden="true"></i> Evaluación</p><div class="action-buttons"><button class="action-button" type="button" data-tab-action="print"><i class="fa-solid fa-print" aria-hidden="true"></i><span>🖨 Imprimir esta pestaña</span></button><button class="action-button action-secondary" type="button" data-tab-action="pdf"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i><span>📄 Exportar esta pestaña a PDF</span></button><button class="action-button action-secondary" type="button" data-tab-action="word"><i class="fa-solid fa-file-word" aria-hidden="true"></i><span>📝 Exportar esta pestaña a Word</span></button></div></div></div>
+        <div class="page-shell">
         <section class="content-section evaluation-section" id="evaluacion" aria-labelledby="evaluation-title" data-reveal>
           <div class="section-heading"><div><p class="section-kicker">06 <span>/ SEGUIMIENTO ACADÉMICO</span></p><h2 id="evaluation-title">Planificación de la evaluación</h2></div><button class="copy-link" type="button" data-copy-target="evaluacion" aria-label="Copiar enlace a la planificación de evaluación" title="Copiar enlace de esta sección"><i class="fa-solid fa-link" aria-hidden="true"></i></button></div>
           <div class="evaluation-table-wrap"><table class="evaluation-table"><thead><tr><th>Evaluación</th><th>Fecha y hora</th><th>Hito</th></tr></thead><tbody><tr><td><span class="eval-badge">EVAL1</span></td><td>22/11/2026 23:59:59</td><td>Primera evaluación</td></tr><tr><td><span class="eval-badge">EVAL2</span></td><td>10/01/2027 23:59:59</td><td>Segunda evaluación</td></tr><tr><td><span class="eval-badge">EVAL3</span></td><td>14/02/2027 23:59:59</td><td>Tercera evaluación</td></tr></tbody></table></div>
           <ol class="timeline evaluation-timeline" aria-label="Línea de tiempo del período y las evaluaciones"><li><span class="timeline-marker start-marker"></span><span class="timeline-date">12 OCT 2026</span><strong>Inicio del período</strong></li><li><span class="timeline-marker"></span><span class="timeline-date">22 NOV 2026</span><strong>EVAL1</strong></li><li><span class="timeline-marker"></span><span class="timeline-date">10 ENE 2027</span><strong>EVAL2</strong></li><li><span class="timeline-marker"></span><span class="timeline-date">14 FEB 2027</span><strong>EVAL3</strong></li><li><span class="timeline-marker end-marker"></span><span class="timeline-date">21 FEB 2027</span><strong>Fin del período</strong></li></ol>
         </section>
-
+        </div>
+      </section>
+      <section class="tab-panel" id="tab-plastrack" role="tabpanel" tabindex="0" aria-labelledby="tab-button-plastrack" aria-hidden="true" data-tab-panel="plastrack" data-export-name="Silabo_BI_PlasTrack" hidden>
+        <div class="action-bar tab-action-bar no-print"><div class="action-bar-inner page-shell"><p><i class="fa-solid fa-file-lines" aria-hidden="true"></i> Proyecto PlasTrack</p><div class="action-buttons"><button class="action-button" type="button" data-tab-action="print"><i class="fa-solid fa-print" aria-hidden="true"></i><span>🖨 Imprimir esta pestaña</span></button><button class="action-button action-secondary" type="button" data-tab-action="pdf"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i><span>📄 Exportar esta pestaña a PDF</span></button><button class="action-button action-secondary" type="button" data-tab-action="word"><i class="fa-solid fa-file-word" aria-hidden="true"></i><span>📝 Exportar esta pestaña a Word</span></button></div></div></div>
+        <div class="page-shell">
         <section class="content-section project-section" id="proyecto" aria-labelledby="project-title" data-reveal>
           <div class="section-heading"><div><p class="section-kicker">07 <span>/ INVESTIGACIÓN APLICADA</span></p><h2 id="project-title">Mecanismo articulador</h2></div><button class="copy-link" type="button" data-copy-target="proyecto" aria-label="Copiar enlace al proyecto PlasTrack" title="Copiar enlace de esta sección"><i class="fa-solid fa-link" aria-hidden="true"></i></button></div>
           <article class="project-card"><div class="project-topline"><span class="project-icon"><i class="fa-solid fa-water" aria-hidden="true"></i></span><span class="project-badge"><i class="fa-solid fa-flask" aria-hidden="true"></i> INVESTIGACIÓN FORMATIVA</span></div><h3>Monitoreo Inteligente de Microplásticos mediante Datos Copernicus para la Conservación de Ecosistemas Insulares <span>“PlasTrack”</span></h3><div class="project-divider"></div><span class="unit-field-label">APORTE DE LA ASIGNATURA</span><p>contribuye al proyecto PlasTrack mediante la investigación formativa al proporcionar los fundamentos para transformar grandes volúmenes de datos satelitales (Copernicus, CMEMS) en información estratégica para la toma de decisiones. El estudiante aprende a diseñar dashboards, KPIs y sistemas de alerta temprana que convierten las detecciones de microplásticos en reportes visuales accesibles para el sector pesquero (CEIPA) y gestores ambientales. Así, la asignatura articula la investigación aplicada.</p></article>
         </section>
-
+        </div>
+      </section>
+      <section class="tab-panel" id="tab-bibliografia" role="tabpanel" tabindex="0" aria-labelledby="tab-button-bibliografia" aria-hidden="true" data-tab-panel="bibliografia" data-export-name="Silabo_BI_Bibliografia" hidden>
+        <div class="action-bar tab-action-bar no-print"><div class="action-bar-inner page-shell"><p><i class="fa-solid fa-file-lines" aria-hidden="true"></i> Bibliografía</p><div class="action-buttons"><button class="action-button" type="button" data-tab-action="print"><i class="fa-solid fa-print" aria-hidden="true"></i><span>🖨 Imprimir esta pestaña</span></button><button class="action-button action-secondary" type="button" data-tab-action="pdf"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i><span>📄 Exportar esta pestaña a PDF</span></button><button class="action-button action-secondary" type="button" data-tab-action="word"><i class="fa-solid fa-file-word" aria-hidden="true"></i><span>📝 Exportar esta pestaña a Word</span></button></div></div></div>
+        <div class="page-shell">
         <section class="content-section bibliography-section" id="bibliografia" aria-labelledby="bibliography-title" data-reveal>
           <div class="section-heading"><div><p class="section-kicker">08 <span>/ LECTURAS Y REFERENCIAS</span></p><h2 id="bibliography-title">Bibliografía y recursos</h2></div><button class="copy-link" type="button" data-copy-target="bibliografia" aria-label="Copiar enlace a bibliografía y recursos" title="Copiar enlace de esta sección"><i class="fa-solid fa-link" aria-hidden="true"></i></button></div>
           <div class="bibliography-groups">
@@ -205,13 +223,18 @@
             <article class="bibliography-group"><div class="bibliography-heading"><span class="bibliography-icon icon-amber"><i class="fa-solid fa-globe" aria-hidden="true"></i></span><div><h3>Sitios web recomendados</h3><span>3 RECURSOS</span></div></div><ol><li><a href="https://ecuciencia.utc.edu.ec/media/articulo/articulo-005-corregido.pdf" target="_blank" rel="noopener">Aplicación de tecnologías .net y chart.js para el desarrollo de un tablero de indicadores clave <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></li><li><a href="https://investigacion.utc.edu.ec/index.php/ciya/es/article/view/391" target="_blank" rel="noopener">Inteligencia de negocios como alternativa de generación de valor y ventaja competitiva en las microempresas <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></li><li><a href="https://learn.microsoft.com/es-es/power-bi/" target="_blank" rel="noopener">DOCUMENTACIÓN OFICIAL DE POWER BI <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></li></ol></article>
           </div>
         </section>
-
+        </div>
+      </section>
+      <section class="tab-panel" id="tab-docente" role="tabpanel" tabindex="0" aria-labelledby="tab-button-docente" aria-hidden="true" data-tab-panel="docente" data-export-name="Silabo_BI_Docente" hidden>
+        <div class="action-bar tab-action-bar no-print"><div class="action-bar-inner page-shell"><p><i class="fa-solid fa-file-lines" aria-hidden="true"></i> Docente</p><div class="action-buttons"><button class="action-button" type="button" data-tab-action="print"><i class="fa-solid fa-print" aria-hidden="true"></i><span>🖨 Imprimir esta pestaña</span></button><button class="action-button action-secondary" type="button" data-tab-action="pdf"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i><span>📄 Exportar esta pestaña a PDF</span></button><button class="action-button action-secondary" type="button" data-tab-action="word"><i class="fa-solid fa-file-word" aria-hidden="true"></i><span>📝 Exportar esta pestaña a Word</span></button></div></div></div>
+        <div class="page-shell">
         <section class="content-section profile-section" id="perfil-docente" aria-labelledby="profile-title" data-reveal>
           <div class="section-heading"><div><p class="section-kicker">09 <span>/ EQUIPO DOCENTE</span></p><h2 id="profile-title">Perfil del profesor</h2></div><button class="copy-link" type="button" data-copy-target="perfil-docente" aria-label="Copiar enlace al perfil del profesor" title="Copiar enlace de esta sección"><i class="fa-solid fa-link" aria-hidden="true"></i></button></div>
           <article class="profile-card"><div class="profile-header"><span class="profile-avatar" aria-hidden="true">LQ</span><div><span class="profile-role">DOCENTE · SISTEMAS DE INFORMACIÓN</span><h3>Luis René Quisaguano Collaguazo</h3><a href="mailto:luis.quisaguano1@utc.edu.ec">luis.quisaguano1@utc.edu.ec</a></div></div><div class="profile-columns"><div><h4><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> Formación académica</h4><ul><li>UNIVERSIDAD TÉCNICA DE COTOPAXI / CUARTO NIVEL — MAGISTER EN SISTEMAS DE INFORMACIÓN N° registro (1020-2020-2224371)</li><li>UNIVERSIDAD TÉCNICA DE COTOPAXI / TERCER NIVEL — INGENIERO EN INFORMATICA Y SISTEMAS N° registro (1020-2016-1743631)</li></ul></div><div><h4><i class="fa-solid fa-briefcase" aria-hidden="true"></i> Experiencia laboral</h4><ul><li>UNIVERSIDAD TECNICA DE COTOPAXI — PROFESOR A TIEMPO PARCIAL</li><li>GAD MUNICIPAL DEL CANTON MEJIA — ANALISTA DE TECNOLOGIAS DE LA INFORMACION Y COMUNICACION</li><li>EVOLUTION SOFT — DESARROLLADOR DE SOFTWARE</li><li>UNIVERSIDAD TECNICA DE COTOPAXI — DOCENTE A TIEMPO COMPLETO</li><li>REBIAN SOFTWARE — GERENTE</li></ul></div></div><div class="profile-signature"><span>Firma: C.I.: 1721895181</span><span>Desarrollo de software UTC 2026</span><span>Fecha de emisión: 15/10/2026 12:31:11</span></div></article>
         </section>
         <p class="document-note">Este documento presenta la información académica proporcionada para el período INI 2026-10-12 / FIN 2027-02-21.</p>
-      </div>
+        </div>
+      </section>
     </div>
   </main>
 
