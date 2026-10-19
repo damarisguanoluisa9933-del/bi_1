@@ -337,7 +337,7 @@ const tourSteps = [
   { selector: '#quiz-title', title: 'Pon a prueba lo aprendido', description: 'Responde el cuestionario, recibe retroalimentación inmediata y consulta tu marcador al terminar.' },
   { selector: '.metric-grid', title: 'Una lectura rápida de la liga', description: 'Las métricas resumen goles, promedio, partidos y al equipo que lidera la tabla.' },
   { selector: '.standings-panel', title: 'Puntos por equipo', description: 'Compara los puntos de los cinco clubes mejor ubicados en el gráfico de barras.' },
-  { selector: '#season-view', title: 'Cambia el periodo y exporta', description: 'Alterna entre la temporada completa y las últimas cinco fechas. Exportar Excel descarga los datos de la vista elegida.' },
+  { selector: '#season-view', title: 'Cambia el periodo y exporta', description: 'Alterna entre la temporada completa y las últimas cinco fechas. Exporta o imprime el tablero de la vista elegida.' },
   { selector: '.standings-table-wrap', title: 'La clasificación completa', description: 'Consulta partidos, victorias, empates, derrotas, diferencia de goles y puntos de los diez equipos.' }
 ];
 
@@ -409,24 +409,7 @@ function getVisibleTable() {
   return [headers, ...rows];
 }
 
-function downloadCsvFallback() {
-  const rows = getVisibleTable();
-  const csv = rows.map((row) => row.map((value) => `"${value.replaceAll('"', '""')}"`).join(';')).join('\r\n');
-  const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `liga-pro-2026-${currentView}.csv`;
-  link.click();
-  URL.revokeObjectURL(url);
-  document.querySelector('#export-status').textContent = 'Excel no está disponible; se descargó la tabla como CSV compatible con Excel.';
-}
-
-function exportReport() {
-  if (typeof XLSX === 'undefined') {
-    downloadCsvFallback();
-    return;
-  }
+function getReportData() {
   const viewName = currentView === 'recent' ? 'Últimas 5 fechas' : 'Temporada completa';
   const date = new Date().toISOString().slice(0, 10);
   const summary = [
@@ -444,21 +427,56 @@ function exportReport() {
     ['Resultado', 'Partidos', 'Porcentaje'],
     ...['Victorias', 'Empates', 'Derrotas'].map((label, index) => [label, outcomeCounts[index], `${Math.round((outcomeCounts[index] / outcomeCounts.reduce((sum, count) => sum + count, 0)) * 100)}%`])
   ];
-  const workbook = XLSX.utils.book_new();
-  const summarySheet = XLSX.utils.aoa_to_sheet(summary);
-  summarySheet['!cols'] = [{ wch: 25 }, { wch: 30 }];
-  const standingsSheet = XLSX.utils.aoa_to_sheet(getVisibleTable());
-  standingsSheet['!cols'] = [{ wch: 8 }, { wch: 30 }, ...Array(6).fill({ wch: 10 })];
-  const outcomesSheet = XLSX.utils.aoa_to_sheet(outcomes);
-  outcomesSheet['!cols'] = [{ wch: 18 }, { wch: 14 }, { wch: 14 }];
-  XLSX.utils.book_append_sheet(workbook, summarySheet, 'Resumen');
-  XLSX.utils.book_append_sheet(workbook, standingsSheet, 'Clasificación');
-  XLSX.utils.book_append_sheet(workbook, outcomesSheet, 'Resultados');
-  XLSX.writeFile(workbook, `liga-pro-2026-${currentView}-${date}.xlsx`);
-  document.querySelector('#export-status').textContent = `Reporte Excel exportado: ${viewName.toLowerCase()}, clasificación y resultados.`;
+  return { date, viewName, summary, outcomes, standings: getVisibleTable() };
+}
+
+function downloadCsvFallback(report) {
+  const rows = [
+    ...report.summary,
+    [],
+    ['Resultados'],
+    ...report.outcomes,
+    [],
+    ['Clasificación'],
+    ...report.standings
+  ];
+  const csv = rows.map((row) => row.map((value) => `"${String(value ?? '').replaceAll('"', '""')}"`).join(';')).join('\r\n');
+  const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `liga-pro-2026-${currentView}-${report.date}.csv`;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  document.querySelector('#export-status').textContent = 'Se descargó el informe completo como CSV compatible con Excel.';
+}
+
+function exportReport() {
+  const report = getReportData();
+  try {
+    if (typeof XLSX === 'undefined') throw new Error('La biblioteca de Excel no está disponible.');
+    const workbook = XLSX.utils.book_new();
+    const summarySheet = XLSX.utils.aoa_to_sheet(report.summary);
+    summarySheet['!cols'] = [{ wch: 25 }, { wch: 30 }];
+    const standingsSheet = XLSX.utils.aoa_to_sheet(report.standings);
+    standingsSheet['!cols'] = [{ wch: 8 }, { wch: 30 }, ...Array(6).fill({ wch: 10 })];
+    const outcomesSheet = XLSX.utils.aoa_to_sheet(report.outcomes);
+    outcomesSheet['!cols'] = [{ wch: 18 }, { wch: 14 }, { wch: 14 }];
+    XLSX.utils.book_append_sheet(workbook, summarySheet, 'Resumen');
+    XLSX.utils.book_append_sheet(workbook, standingsSheet, 'Clasificación');
+    XLSX.utils.book_append_sheet(workbook, outcomesSheet, 'Resultados');
+    XLSX.writeFile(workbook, `liga-pro-2026-${currentView}-${report.date}.xlsx`);
+    document.querySelector('#export-status').textContent = `Reporte Excel exportado: ${report.viewName.toLowerCase()}, clasificación y resultados.`;
+  } catch (error) {
+    console.error('No se pudo exportar el reporte como Excel; se intentará descargar como CSV.', error);
+    downloadCsvFallback(report);
+  }
 }
 
 document.querySelector('#export-report').addEventListener('click', exportReport);
+document.querySelector('#print-dashboard').addEventListener('click', () => window.print());
 
 const navLinks = [...document.querySelectorAll('.nav-link')];
 const sections = [...document.querySelectorAll('#fundamentos, #liga')];
