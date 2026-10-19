@@ -294,6 +294,172 @@ function updateDashboard(view) {
 
 document.querySelector('#season-view').addEventListener('change', (event) => updateDashboard(event.target.value));
 
+const themeToggle = document.querySelector('#theme-toggle');
+const rootElement = document.documentElement;
+
+function applyTheme(theme) {
+  const isDark = theme === 'dark';
+  rootElement.dataset.theme = isDark ? 'dark' : 'light';
+  themeToggle.setAttribute('aria-checked', String(isDark));
+  themeToggle.setAttribute('aria-label', isDark ? 'Activar tema claro' : 'Activar tema oscuro');
+  themeToggle.querySelector('.theme-icon').textContent = isDark ? '☼' : '☾';
+  themeToggle.querySelector('.theme-label').textContent = isDark ? 'Claro' : 'Oscuro';
+  document.querySelector('meta[name="theme-color"]').content = isDark ? '#171c17' : '#f4f4ed';
+  try {
+    localStorage.setItem('datos-en-juego-theme', isDark ? 'dark' : 'light');
+  } catch {}
+  updateChartTheme();
+}
+
+function updateChartTheme() {
+  const isDark = rootElement.dataset.theme === 'dark';
+  const labelColor = isDark ? '#b4bcb0' : '#7b8076';
+  const gridColor = isDark ? '#384038' : '#eceee7';
+  Object.values(chartInstances).forEach((chart) => {
+    for (const axis of Object.values(chart.options.scales || {})) {
+      if (axis.ticks) axis.ticks.color = labelColor;
+      if (axis.grid && axis.grid.display !== false) axis.grid.color = gridColor;
+    }
+    chart.update('none');
+  });
+}
+
+let savedTheme = 'light';
+try {
+  savedTheme = localStorage.getItem('datos-en-juego-theme') || 'light';
+} catch {}
+rootElement.dataset.theme = savedTheme === 'dark' ? 'dark' : 'light';
+themeToggle.addEventListener('click', () => applyTheme(rootElement.dataset.theme === 'dark' ? 'light' : 'dark'));
+
+const tourSteps = [
+  { selector: '#fundamentos .section-heading', title: 'BI: decidir con contexto', description: 'La inteligencia de negocios conecta datos confiables con preguntas que ayudan a tomar mejores decisiones.' },
+  { selector: '.etl-flow', title: 'El recorrido ETL', description: 'Extrae datos desde sus fuentes, transfórmalos para corregirlos y unificarlos, y cárgalos listos para analizar.' },
+  { selector: '#quiz-title', title: 'Pon a prueba lo aprendido', description: 'Responde el cuestionario, recibe retroalimentación inmediata y consulta tu marcador al terminar.' },
+  { selector: '.metric-grid', title: 'Una lectura rápida de la liga', description: 'Las métricas resumen goles, promedio, partidos y al equipo que lidera la tabla.' },
+  { selector: '.standings-panel', title: 'Puntos por equipo', description: 'Compara los puntos de los cinco clubes mejor ubicados en el gráfico de barras.' },
+  { selector: '#season-view', title: 'Cambia el periodo y exporta', description: 'Alterna entre la temporada completa y las últimas cinco fechas. Exportar Excel descarga los datos de la vista elegida.' },
+  { selector: '.standings-table-wrap', title: 'La clasificación completa', description: 'Consulta partidos, victorias, empates, derrotas, diferencia de goles y puntos de los diez equipos.' }
+];
+
+const tourDialog = document.querySelector('#tour-dialog');
+const tourBackdrop = document.querySelector('#tour-backdrop');
+let tourStepIndex = 0;
+let tourTarget = null;
+
+function closeTour() {
+  if (tourTarget) tourTarget.classList.remove('tour-target');
+  tourTarget = null;
+  tourDialog.hidden = true;
+  tourBackdrop.hidden = true;
+  document.querySelector('#tour-launch').focus();
+}
+
+function renderTourStep(index) {
+  if (tourTarget) tourTarget.classList.remove('tour-target');
+  tourStepIndex = index;
+  const step = tourSteps[tourStepIndex];
+  tourTarget = document.querySelector(step.selector);
+  if (tourTarget) {
+    tourTarget.classList.add('tour-target');
+    tourTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  document.querySelector('#tour-step-count').textContent = `PASO ${tourStepIndex + 1} DE ${tourSteps.length}`;
+  document.querySelector('#tour-title').textContent = step.title;
+  document.querySelector('#tour-description').textContent = step.description;
+  document.querySelector('#tour-previous').disabled = tourStepIndex === 0;
+  document.querySelector('#tour-next').textContent = tourStepIndex === tourSteps.length - 1 ? 'Finalizar ✓' : 'Siguiente →';
+}
+
+function openTour() {
+  tourBackdrop.hidden = false;
+  tourDialog.hidden = false;
+  renderTourStep(0);
+  document.querySelector('#tour-next').focus();
+}
+
+document.querySelector('#tour-launch').addEventListener('click', openTour);
+document.querySelector('#tour-close').addEventListener('click', closeTour);
+tourBackdrop.addEventListener('click', closeTour);
+document.querySelector('#tour-previous').addEventListener('click', () => {
+  if (tourStepIndex > 0) renderTourStep(tourStepIndex - 1);
+});
+document.querySelector('#tour-next').addEventListener('click', () => {
+  if (tourStepIndex === tourSteps.length - 1) closeTour();
+  else renderTourStep(tourStepIndex + 1);
+});
+tourDialog.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    closeTour();
+    return;
+  }
+  if (event.key !== 'Tab') return;
+  const focusable = [...tourDialog.querySelectorAll('button:not(:disabled)')];
+  if (event.shiftKey && document.activeElement === focusable[0]) {
+    event.preventDefault();
+    focusable.at(-1).focus();
+  } else if (!event.shiftKey && document.activeElement === focusable.at(-1)) {
+    event.preventDefault();
+    focusable[0].focus();
+  }
+});
+
+function getVisibleTable() {
+  const headers = [...document.querySelectorAll('.standings-table thead th')].map((cell) => cell.textContent.trim());
+  const rows = [...document.querySelectorAll('#standings-body tr')].map((row) => [...row.cells].map((cell) => cell.textContent.trim()));
+  return [headers, ...rows];
+}
+
+function downloadCsvFallback() {
+  const rows = getVisibleTable();
+  const csv = rows.map((row) => row.map((value) => `"${value.replaceAll('"', '""')}"`).join(';')).join('\r\n');
+  const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `liga-pro-2026-${currentView}.csv`;
+  link.click();
+  URL.revokeObjectURL(url);
+  document.querySelector('#export-status').textContent = 'Excel no está disponible; se descargó la tabla como CSV compatible con Excel.';
+}
+
+function exportReport() {
+  if (typeof XLSX === 'undefined') {
+    downloadCsvFallback();
+    return;
+  }
+  const viewName = currentView === 'recent' ? 'Últimas 5 fechas' : 'Temporada completa';
+  const date = new Date().toISOString().slice(0, 10);
+  const summary = [
+    ['Liga Pro 2026 · Reporte'],
+    ['Vista', viewName],
+    ['Fecha de exportación', new Date().toLocaleDateString('es-EC')],
+    ['Goles anotados', document.querySelector('.goals-value').textContent.trim()],
+    ['Equipo líder', document.querySelector('.leader-name').textContent.trim()],
+    ['Puntos del líder', document.querySelector('.leader-points').textContent.trim()],
+    ['Promedio de goles', document.querySelector('.average-value').textContent.trim()],
+    ['Partidos', document.querySelector('.matches-value').textContent.trim()]
+  ];
+  const outcomeCounts = currentView === 'recent' ? resultsByRecent : resultsBySeason;
+  const outcomes = [
+    ['Resultado', 'Partidos', 'Porcentaje'],
+    ...['Victorias', 'Empates', 'Derrotas'].map((label, index) => [label, outcomeCounts[index], `${Math.round((outcomeCounts[index] / outcomeCounts.reduce((sum, count) => sum + count, 0)) * 100)}%`])
+  ];
+  const workbook = XLSX.utils.book_new();
+  const summarySheet = XLSX.utils.aoa_to_sheet(summary);
+  summarySheet['!cols'] = [{ wch: 25 }, { wch: 30 }];
+  const standingsSheet = XLSX.utils.aoa_to_sheet(getVisibleTable());
+  standingsSheet['!cols'] = [{ wch: 8 }, { wch: 30 }, ...Array(6).fill({ wch: 10 })];
+  const outcomesSheet = XLSX.utils.aoa_to_sheet(outcomes);
+  outcomesSheet['!cols'] = [{ wch: 18 }, { wch: 14 }, { wch: 14 }];
+  XLSX.utils.book_append_sheet(workbook, summarySheet, 'Resumen');
+  XLSX.utils.book_append_sheet(workbook, standingsSheet, 'Clasificación');
+  XLSX.utils.book_append_sheet(workbook, outcomesSheet, 'Resultados');
+  XLSX.writeFile(workbook, `liga-pro-2026-${currentView}-${date}.xlsx`);
+  document.querySelector('#export-status').textContent = `Reporte Excel exportado: ${viewName.toLowerCase()}, clasificación y resultados.`;
+}
+
+document.querySelector('#export-report').addEventListener('click', exportReport);
+
 const navLinks = [...document.querySelectorAll('.nav-link')];
 const sections = [...document.querySelectorAll('#fundamentos, #liga')];
 const sectionObserver = new IntersectionObserver((entries) => {
@@ -310,4 +476,5 @@ if (typeof Chart !== 'undefined') {
   createPointsChart();
   createResultsChart();
   createEvolutionChart();
+  updateChartTheme();
 }

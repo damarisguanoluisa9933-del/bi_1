@@ -24,7 +24,7 @@ button, select { font: inherit; }
 button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
 .section-shell { width: min(1180px, calc(100% - 64px)); margin: 0 auto; }
 
-.site-header { height: 76px; padding: 0 max(32px, calc((100vw - 1180px) / 2)); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); background: rgba(244,244,237,.94); position: sticky; top: 0; z-index: 10; backdrop-filter: blur(14px); }
+.site-header { height: 76px; padding: 0 max(32px, calc((100vw - 1180px) / 2)); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--paper) 94%, transparent); position: sticky; top: 0; z-index: 10; backdrop-filter: blur(14px); }
 .brand { display: inline-flex; align-items: center; gap: 10px; }
 .brand-mark { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: white; font: 700 21px var(--display); }
 .brand-mark span { color: var(--green); }
@@ -37,6 +37,15 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
 .nav-link.is-active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 3px; background: var(--green-deep); }
 .header-note, .eyebrow, .visual-topline, .visual-caption, .intro-index, .card-meta, .example-label, .question-number, .result-kicker, .league-topline, .season-select-wrap label, .metric-label, .panel-index, .panel-unit, .chart-foot, .table-heading .panel-unit, .standings-table th, .data-note, .site-footer > span, .back-top { font: 10px var(--mono); letter-spacing: .04em; }
 .header-note { display: flex; align-items: center; gap: 8px; color: var(--muted); }
+.header-actions { display: flex; align-items: center; gap: 9px; }
+.theme-toggle, .tour-launch { min-height: 34px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 0 10px; border: 1px solid var(--line); background: var(--white); color: var(--ink); cursor: pointer; font-size: 10px; }
+.theme-icon { color: var(--green-deep); font-size: 15px; }
+.switch-track { width: 25px; height: 14px; padding: 2px; display: flex; align-items: center; border-radius: 10px; background: #c8ccc1; transition: background .2s; }
+.switch-track span { width: 10px; height: 10px; border-radius: 50%; background: white; transition: transform .2s; }
+.theme-toggle[aria-checked="true"] .switch-track { background: var(--green-deep); }
+.theme-toggle[aria-checked="true"] .switch-track span { transform: translateX(11px); }
+.tour-launch { border-color: var(--ink); background: var(--ink); color: var(--white); font-weight: 700; }
+.tour-launch > span:first-child { color: var(--green); font-size: 16px; }
 .live-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #76a95a; box-shadow: 0 0 0 3px rgba(118,169,90,.14); }
 
 .intro { min-height: 494px; padding: 70px 0 58px; display: grid; grid-template-columns: 1fr .94fr; align-items: center; gap: 54px; position: relative; }
@@ -134,6 +143,11 @@ h1, h2, h3, h4, p { margin-top: 0; }
 .season-select-wrap { display: flex; flex-direction: column; gap: 6px; }
 .season-select-wrap label { color: var(--muted); font-size: 8px; }
 .season-select-wrap select { width: 190px; padding: 9px 32px 9px 11px; border: 1px solid #c9cdbf; border-radius: 0; appearance: none; color: var(--ink); background: var(--paper); font-size: 11px; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='m2 4 4 4 4-4' fill='none' stroke='%2320261f' stroke-width='1.4'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 11px center; }
+.league-controls { display: flex; align-items: end; gap: 9px; }
+.export-button { min-height: 36px; padding: 0 12px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--green-deep); background: var(--green-deep); color: white; cursor: pointer; font-size: 10px; font-weight: 700; transition: background .2s, transform .2s; }
+.export-button:hover { background: #344e24; transform: translateY(-1px); }
+.export-button > span { font-size: 16px; }
+.export-status { min-height: 16px; margin: 8px 0 0; color: var(--green-deep); font-size: 10px; }
 .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid #cdd1c5; border-bottom: 1px solid #cdd1c5; }
 .metric-card { min-height: 127px; position: relative; display: flex; flex-direction: column; padding: 17px 18px 14px; border-right: 1px solid #cdd1c5; }
 .metric-card:first-child { padding-left: 0; }
@@ -196,11 +210,13 @@ h1, h2, h3, h4, p { margin-top: 0; }
 
 @media (max-width: 760px) {
   .section-shell { width: min(100% - 36px, 600px); }
-  .site-header { height: 64px; padding: 0 18px; }
-  .main-nav { gap: 16px; }
+  html { scroll-padding-top: 118px; }
+  .site-header { height: auto; min-height: 64px; padding: 9px 18px 0; flex-wrap: wrap; }
+  .main-nav { order: 3; flex: 0 0 100%; height: 34px; justify-content: center; gap: 28px; }
+  .header-actions { margin-left: auto; }
   .nav-link { gap: 5px; font-size: 8px; }
   .nav-link span { font-size: 10px; }
-  .header-note { display: none; }
+  .theme-toggle, .tour-launch { min-height: 32px; }
   .intro { min-height: auto; padding: 55px 0 48px; grid-template-columns: 1fr; gap: 30px; }
   .intro h1 { font-size: clamp(56px, 13vw, 78px); }
   .intro-visual { height: 292px; }
@@ -218,6 +234,8 @@ h1, h2, h3, h4, p { margin-top: 0; }
   .answer-list { grid-template-columns: 1fr; }
   .league { padding-top: 23px; }
   .league-heading { align-items: start; gap: 18px; flex-direction: column; }
+  .league-controls { width: 100%; flex-wrap: wrap; }
+  .season-select-wrap select { width: min(190px, 48vw); }
   .metric-grid { grid-template-columns: 1fr 1fr; }
   .metric-card { min-height: 115px; padding: 15px 12px; border-bottom: 1px solid #cdd1c5; }
   .metric-card:first-child { padding-left: 12px; }
@@ -240,6 +258,8 @@ h1, h2, h3, h4, p { margin-top: 0; }
   .main-nav { gap: 11px; }
   .nav-link { font-size: 7px; }
   .nav-link span { font-size: 9px; }
+  .theme-label, .tour-launch > span:last-child { display: none; }
+  .theme-toggle, .tour-launch { width: 34px; padding: 0; }
   .intro-visual { padding-right: 13px; padding-left: 13px; }
   .visual-bars { gap: 7px; }
   .etl-flow { padding-right: 0; padding-left: 0; gap: 4px; }
@@ -251,4 +271,66 @@ h1, h2, h3, h4, p { margin-top: 0; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #171c17;
+  --white: #222920;
+  --ink: #eff2e8;
+  --muted: #a2aa9d;
+  --line: #373e34;
+  --green-deep: #a7d66d;
+  --orange: #f08a68;
+  --blue: #8bb8d1;
+}
+
+:root[data-theme="dark"] .intro-text,
+:root[data-theme="dark"] .principle-card > p,
+:root[data-theme="dark"] .example p,
+:root[data-theme="dark"] .metric-foot,
+:root[data-theme="dark"] .chart-legend-item span,
+:root[data-theme="dark"] .line-legend,
+:root[data-theme="dark"] .standings-table td,
+:root[data-theme="dark"] .data-note { color: #b4bcb0; }
+:root[data-theme="dark"] .example { background: #293128; }
+:root[data-theme="dark"] .league { background: #1d241e; border-color: #353d34; }
+:root[data-theme="dark"] .league-topline,
+:root[data-theme="dark"] .metric-grid,
+:root[data-theme="dark"] .metric-card,
+:root[data-theme="dark"] .standings-table th,
+:root[data-theme="dark"] .standings-table td,
+:root[data-theme="dark"] .chart-foot { border-color: #384038; }
+:root[data-theme="dark"] .metric-card { border-right-color: #384038; }
+:root[data-theme="dark"] .standings-table th { background: #252d25; color: #adb5a8; }
+:root[data-theme="dark"] .standings-table td:nth-child(2),
+:root[data-theme="dark"] .standings-table td:last-child { color: var(--ink); }
+:root[data-theme="dark"] .season-select-wrap select { border-color: #485045; background-color: #222920; }
+:root[data-theme="dark"] .chart-panel { border-color: #384038; }
+:root[data-theme="dark"] .panel-unit,
+:root[data-theme="dark"] .chart-foot { color: #a2aa9d; }
+:root[data-theme="dark"] .site-footer { background: #101410; }
+:root[data-theme="dark"] .theme-toggle { border-color: #4b5547; }
+:root[data-theme="dark"] .switch-track { background: #68874f; }
+:root[data-theme="dark"] .tour-launch { background: #d2f18f; color: #20261f; border-color: #d2f18f; }
+:root[data-theme="dark"] .tour-launch > span:first-child { color: #42652c; }
+
+.tour-backdrop[hidden], .tour-dialog[hidden] { display: none; }
+.tour-backdrop { position: fixed; inset: 0; z-index: 1000; background: rgba(12, 16, 12, .76); }
+.tour-target { position: relative !important; z-index: 1001 !important; box-shadow: 0 0 0 9999px rgba(12, 16, 12, .76); }
+.tour-dialog { position: fixed; right: max(24px, calc((100vw - 1180px) / 2)); bottom: 24px; z-index: 1100; width: min(390px, calc(100vw - 36px)); padding: 19px 21px 17px; border-top: 3px solid var(--green); background: var(--white); color: var(--ink); box-shadow: 0 14px 46px rgba(0,0,0,.24); animation: rise-in .25s both; }
+.tour-dialog-top, .tour-controls { display: flex; align-items: center; justify-content: space-between; }
+.tour-kicker, .tour-step-count { color: var(--green-deep); font: 9px var(--mono); letter-spacing: .04em; }
+.tour-close { width: 28px; height: 28px; border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 23px; line-height: 1; }
+.tour-step-count { margin: 12px 0 7px; color: var(--muted); }
+.tour-dialog h2 { margin: 0 0 6px; font: 600 20px var(--display); }
+.tour-description { min-height: 38px; margin: 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.tour-controls { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+.tour-back, .tour-next { padding: 7px 9px; border: 0; cursor: pointer; font-size: 10px; }
+.tour-back { background: transparent; color: var(--muted); }
+.tour-back:disabled { opacity: .45; cursor: default; }
+.tour-next { background: var(--green); color: #20261f; font-weight: 700; }
+
+@media (max-width: 760px) {
+  .tour-dialog { right: 18px; bottom: 18px; }
 }
