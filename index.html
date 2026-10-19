@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="es">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#f4f4ed">
+	<meta name="description" content="Explora los fundamentos de inteligencia de negocios y un dashboard interactivo de Liga Pro 2026.">
+	<title>Datos en juego | BI + Liga Pro 2026</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="css/estilos.css">
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+	<script src="js/script.js" defer></script>
+</head>
+<body>
+	<header class="site-header">
+		<a class="brand" href="#inicio" aria-label="Datos en juego, inicio">
+			<span class="brand-mark" aria-hidden="true">d<span>.</span></span>
+			<span class="brand-name">datos<span>en juego</span></span>
+		</a>
+		<nav class="main-nav" aria-label="Navegación principal">
+			<a class="nav-link is-active" href="#fundamentos" data-nav="fundamentos">01 <span>Fundamentos BI</span></a>
+			<a class="nav-link" href="#liga" data-nav="liga">02 <span>Liga Pro 2026</span></a>
+		</nav>
+		<div class="header-note"><span class="live-dot"></span> LABORATORIO INTERACTIVO</div>
+	</header>
+
+	<main id="inicio">
+		<section class="intro section-shell" aria-labelledby="hero-title">
+			<div class="intro-copy">
+				<p class="eyebrow"><span class="eyebrow-line"></span> INTELIGENCIA DE NEGOCIOS, SIN MISTERIO</p>
+				<h1 id="hero-title">Los datos<br>también <span>juegan.</span></h1>
+				<p class="intro-text">De la pregunta correcta a una decisión mejor. Aprende cómo BI transforma datos en acción y explora una temporada de fútbol desde el tablero.</p>
+				<a class="text-link" href="#fundamentos">Explorar el laboratorio <span aria-hidden="true">↘</span></a>
+			</div>
+			<div class="intro-visual" aria-label="Ilustración abstracta de datos convertidos en decisiones">
+				<div class="visual-topline"><span>DATOS → DECISIONES</span><span>FIG. 01</span></div>
+				<div class="visual-grid" aria-hidden="true">
+					<div class="visual-axis"><span>100</span><span>50</span><span>00</span></div>
+					<div class="visual-bars"><i style="--bar-height:34%"></i><i style="--bar-height:53%"></i><i style="--bar-height:45%"></i><i style="--bar-height:76%"></i><i style="--bar-height:63%"></i><i style="--bar-height:92%"></i><i style="--bar-height:72%"></i></div>
+					<span class="visual-orbit orbit-one"></span><span class="visual-orbit orbit-two"></span>
+					<div class="visual-stamp"><span>BI</span><small>ver · entender<br>decidir</small></div>
+				</div>
+				<div class="visual-caption"><span>UNA MEJOR PREGUNTA</span><span class="caption-arrow">↗</span><span>UNA MEJOR JUGADA</span></div>
+			</div>
+			<div class="intro-index"><span>APRENDE</span><span>01—02</span><span>EXPLORA</span></div>
+		</section>
+
+		<section class="foundations section-shell" id="fundamentos" aria-labelledby="foundations-title">
+			<div class="section-heading">
+				<div><p class="eyebrow"><span class="eyebrow-line"></span> PRIMERO, LO ESENCIAL</p><h2 id="foundations-title">Fundamentos <span>de BI</span></h2></div>
+				<p class="section-aside">La inteligencia de negocios conecta datos confiables con preguntas que importan.</p>
+			</div>
+
+			<div class="principle-grid">
+				<article class="principle-card decision-card">
+					<div class="card-meta"><span>01 / DECIDIR</span><span class="card-symbol" aria-hidden="true">↗</span></div>
+					<h3>Menos intuición<br>aislada. Más contexto.</h3>
+					<p>BI organiza la información para que una decisión se apoye en evidencia, objetivos y el momento adecuado.</p>
+					<div class="example"><span class="example-label">EN LA PRÁCTICA</span><p>Una tienda detecta que los paraguas se agotan antes de días lluviosos y ajusta sus pedidos con datos de ventas y pronósticos.</p></div>
+				</article>
+				<article class="principle-card etl-card">
+					<div class="card-meta"><span>02 / PREPARAR</span><span class="card-symbol" aria-hidden="true">⌁</span></div>
+					<h3>ETL: datos listos<br>para jugar.</h3>
+					<p>Un flujo convierte fuentes dispersas en información coherente y útil para analizar.</p>
+					<div class="etl-flow" aria-label="Etapas del proceso ETL">
+						<div class="etl-step"><span class="etl-letter">E</span><strong>Extraer</strong><small>Reunir fuentes</small></div>
+						<span class="etl-arrow" aria-hidden="true">→</span>
+						<div class="etl-step"><span class="etl-letter">T</span><strong>Transformar</strong><small>Limpiar y unir</small></div>
+						<span class="etl-arrow" aria-hidden="true">→</span>
+						<div class="etl-step"><span class="etl-letter">L</span><strong>Cargar</strong><small>Dejar listo</small></div>
+					</div>
+					<div class="example"><span class="example-label">EN LA PRÁCTICA · FÚTBOL</span><p>Se extraen resultados de partidos, se unifican los nombres de los clubes y se cargan en una tabla de posiciones.</p></div>
+				</article>
+			</div>
+
+			<section class="quiz" aria-labelledby="quiz-title">
+				<div class="quiz-heading">
+					<div><p class="eyebrow"><span class="eyebrow-line"></span> TURNO DE DEMOSTRARLO</p><h3 id="quiz-title">El dato <span>clave.</span></h3></div>
+					<div class="quiz-score" aria-live="polite"><span id="score-count">00</span><small>DE 04</small></div>
+				</div>
+				<div class="quiz-progress" role="progressbar" aria-label="Progreso del cuestionario" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0"><span id="progress-fill"></span></div>
+				<div class="quiz-content" id="quiz-content" aria-live="polite">
+					<div class="question-number" id="question-number">PREGUNTA 01 / 04</div>
+					<h4 id="question-text">¿Cuál es el objetivo principal de BI?</h4>
+					<div class="answer-list" id="answer-list"></div>
+					<div class="quiz-feedback" id="quiz-feedback" aria-live="polite"></div>
+					<button class="quiz-next" id="quiz-next" type="button" disabled>Siguiente pregunta <span aria-hidden="true">→</span></button>
+				</div>
+				<div class="quiz-result" id="quiz-result" hidden aria-live="polite">
+					<span class="result-kicker">MARCADOR FINAL</span>
+					<p class="result-score"><span id="final-score">0</span><small> / 4</small></p>
+					<h4 id="result-message"></h4>
+					<p id="result-detail"></p>
+					<button class="quiz-restart" id="quiz-restart" type="button">Volver a jugar <span aria-hidden="true">↻</span></button>
+				</div>
+			</section>
+		</section>
+
+		<section class="league" id="liga" aria-labelledby="league-title">
+			<div class="league-inner section-shell">
+				<div class="league-topline"><span><span class="live-dot"></span> TABLERO DE TEMPORADA</span><span>DATOS SIMULADOS · FECHA 12</span></div>
+				<div class="league-heading">
+					<div><p class="eyebrow"><span class="eyebrow-line"></span> EL JUEGO, EN DATOS</p><h2 id="league-title">Liga Pro <span>2026</span></h2></div>
+					<div class="season-select-wrap"><label for="season-view">VISTA</label><select id="season-view" aria-label="Seleccionar visualización de temporada"><option value="season">Temporada completa</option><option value="recent">Últimas 5 fechas</option></select></div>
+				</div>
+
+				<div class="metric-grid" aria-label="Métricas de la temporada">
+					<article class="metric-card"><span class="metric-label">GOLES ANOTADOS</span><strong class="metric-value goals-value">143</strong><span class="metric-foot"><span class="metric-trend">+8.4%</span> vs. temporada anterior</span><span class="metric-mark" aria-hidden="true">↗</span></article>
+					<article class="metric-card"><span class="metric-label">LÍDER ACTUAL</span><strong class="metric-value leader-name">Barcelona SC</strong><span class="metric-foot"><span class="leader-points">25 PTS</span> · 12 partidos</span><span class="metric-mark leader-mark" aria-hidden="true">01</span></article>
+					<article class="metric-card"><span class="metric-label">PROMEDIO DE GOLES</span><strong class="metric-value average-value">2.38</strong><span class="metric-foot">por partido disputado</span><span class="metric-mark" aria-hidden="true">Ø</span></article>
+					<article class="metric-card"><span class="metric-label">PARTIDOS JUGADOS</span><strong class="metric-value matches-value">60</strong><span class="metric-foot">10 equipos · 12 fechas</span><span class="metric-mark" aria-hidden="true">12</span></article>
+				</div>
+
+				<div class="chart-grid">
+					<article class="chart-panel standings-panel">
+						<div class="panel-heading"><div><span class="panel-index">A / TABLA</span><h3>Puntos por equipo</h3></div><span class="panel-unit">PUNTOS</span></div>
+						<div class="chart-wrap bar-chart-wrap"><canvas id="points-chart" role="img" aria-label="Gráfico de barras con puntos por equipo"></canvas></div>
+						<div class="chart-foot"><span>TOP 5 DE 10 EQUIPOS</span><span>FECHA 12 ↗</span></div>
+					</article>
+					<article class="chart-panel wins-panel">
+						<div class="panel-heading"><div><span class="panel-index">B / RESULTADOS</span><h3>¿Cómo se suman?</h3></div><span class="panel-unit">LIGA</span></div>
+						<div class="donut-area"><div class="chart-wrap donut-chart-wrap"><canvas id="results-chart" role="img" aria-label="Gráfico circular con la proporción de victorias, empates y derrotas"></canvas><div class="donut-center"><strong>120</strong><span>RESULTADOS</span></div></div><div class="chart-legend" id="results-legend"></div></div>
+						<div class="chart-foot"><span>VICTORIA · EMPATE · DERROTA</span><span>TEMPORADA</span></div>
+					</article>
+					<article class="chart-panel evolution-panel">
+						<div class="panel-heading"><div><span class="panel-index">C / EVOLUCIÓN</span><h3>La carrera por la punta</h3></div><span class="panel-unit">PUNTOS ACUMULADOS</span></div>
+						<div class="chart-wrap line-chart-wrap"><canvas id="evolution-chart" role="img" aria-label="Gráfico lineal con la evolución de puntos acumulados de los tres primeros equipos"></canvas></div>
+						<div class="line-legend"><span><i class="legend-dot dot-green"></i>Barcelona SC</span><span><i class="legend-dot dot-orange"></i>Independiente del Valle</span><span><i class="legend-dot dot-blue"></i>LDU Quito</span></div>
+					</article>
+				</div>
+
+				<div class="table-heading"><div><span class="panel-index">D / CLASIFICACIÓN</span><h3>Tabla general</h3></div><span class="panel-unit">ACTUALIZADA A FECHA 12</span></div>
+				<div class="standings-table-wrap"><table class="standings-table"><thead><tr><th scope="col">#</th><th scope="col">EQUIPO</th><th scope="col">PJ</th><th scope="col">G</th><th scope="col">E</th><th scope="col">P</th><th scope="col">DG</th><th scope="col">PTS</th></tr></thead><tbody id="standings-body"></tbody></table></div>
+				<p class="data-note">Datos ficticios creados con fines demostrativos. No representan la clasificación oficial.</p>
+			</div>
+		</section>
+	</main>
+
+	<footer class="site-footer"><a class="footer-brand" href="#inicio">datos<span>en juego</span></a><span>BI PARA VER EL JUEGO CON OTROS OJOS.</span><a href="#inicio" class="back-top">VOLVER ARRIBA ↑</a></footer>
+</body>
+</html>
