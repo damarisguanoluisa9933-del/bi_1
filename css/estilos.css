@@ -59,6 +59,12 @@ h1, h2, h3, h4, p { margin-top: 0; }
 .text-link { display: inline-flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--ink); padding-bottom: 7px; font-size: 13px; font-weight: 700; }
 .text-link span { font-size: 17px; transition: transform .2s; }
 .text-link:hover span { transform: translate(3px, 3px); }
+.syllabus-link { width: fit-content; display: flex; align-items: center; gap: 10px; margin-top: 17px; padding: 9px 12px; border: 1px solid var(--line); background: var(--white); transition: border-color .2s, transform .2s; }
+.syllabus-link:hover { transform: translateY(-2px); border-color: var(--green-deep); }
+.syllabus-link-icon { width: 28px; height: 28px; display: grid; place-items: center; background: var(--green); color: var(--ink); font-size: 15px; }
+.syllabus-link strong, .syllabus-link small { display: block; }
+.syllabus-link strong { font-size: 11px; }
+.syllabus-link small { margin-top: 3px; color: var(--muted); font-size: 8px; }
 .intro-visual { height: 330px; padding: 18px 20px 16px; overflow: hidden; background: var(--ink); color: white; position: relative; animation: rise-in .7s .12s both; }
 .visual-topline { display: flex; justify-content: space-between; color: #b8c0b0; font-size: 9px; position: relative; z-index: 1; }
 .visual-grid { height: 244px; margin: 12px 0 0; position: relative; border-bottom: 1px solid #555d50; background-image: linear-gradient(to right, transparent calc(100% - 1px), rgba(255,255,255,.07) 1px), linear-gradient(to bottom, transparent calc(100% - 1px), rgba(255,255,255,.07) 1px); background-size: 20% 25%; }
